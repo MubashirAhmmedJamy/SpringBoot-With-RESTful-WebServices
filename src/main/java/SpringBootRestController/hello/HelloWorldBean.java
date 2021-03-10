@@ -1,4 +1,4 @@
-package SpringBootRestController;
+package SpringBootRestController.hello;
 
 public class HelloWorldBean {
 	String Message;

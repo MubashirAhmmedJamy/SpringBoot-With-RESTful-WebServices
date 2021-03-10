@@ -1,4 +1,4 @@
-package SpringBootRestController;
+package SpringBootRestController.books;
 
 public class Book {
 	long id;
