@@ -2,9 +2,16 @@ package SpringBootRestController.users;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class User {
 	private Integer id;
+	
+	@Size(max=10,min=4,message="Name size must be between 4 and 10 characters")
 	private String name;
+	
+	@Past(message="Birthdate must be of the past")
 	private Date dateOfBirth;
 	
 	

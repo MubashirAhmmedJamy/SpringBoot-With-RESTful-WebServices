@@ -10,6 +10,7 @@ package SpringBootRestController.users;
 
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +55,7 @@ public class UserController {
    
    @RequestMapping(method=RequestMethod.POST, path="/users")
    
-   public ResponseEntity<User> addUser(@RequestBody User user){
+   public ResponseEntity<User> addUser(@Valid @RequestBody User user){
 	   System.out.println("Testing The Service POST");
 	   
 	   URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userService.saveOne(user).getId()).toUri();
