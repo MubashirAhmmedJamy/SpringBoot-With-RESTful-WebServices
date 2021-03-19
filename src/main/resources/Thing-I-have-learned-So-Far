@@ -1,2 +1,108 @@
-1. How to create and download a ready project from spring.io
-2. 
+How to:
+1. Create and download a ready project from spring.io
+2. configure pom.xml and how does Maven manage the project dependencies. We just need to add below 
+properties for our convenience:
+	<properties>
+		<java.version>1.8</java.version>
+		<downloadSources>true</downloadSources>
+		<downloadJavadocs>true</downloadJavadocs>
+	</properties>
+3. Learned about different started projects:
+- spring-boot-starter-web
+- spring-boot-starter-hateoas
+- spring-boot-starter-web-services
+- spring-boot-starter-actuator
+- spring-boot-starter-test
+- spring-boot-starter-thymeleaf
+- spring-boot-starter-validation
+
+4. Learned about spring boot devlools. This enables the application to take the changes automatically when changes are saved. This restarts the server with the new changes. 
+
+Below dependencies are needed.
+
+- spring-boot-devtools
+
+5. SprinBootApplication: The main class of the application will be annotated with the @@SpringBootApplication annotation. This tells spring boot to initiate an auto scan for 
+
+components and beans that need to be managed by spring boot.
+
+6. When a Spring Application is run, we get an application context as return. With the getBeanDefinitionNames() method available in the application context, we can see what 
+
+are the different beans that SpringBoot has auto configured or created during the application startup.
+
+7. Below are the so far known annotations to tell spring boot that what are the beans that need to be managed by Spring boot:
+- Component
+- Controller
+- RestController
+- Resource
+- Bean (Bean works at the method level and others listed above works at the class level. When using Bean annotation, the method name will be considered as the Bean name 
+
+and the method return type will be the type of the bean)
+
+8. Below are the basic things that we need to create for having a restful service:
+
+	- A controller class with @RestController annotation.
+	- We may need to have a class or object to represent an instance of the data
+	- A method with a @RequestMapping annotation. Need to mention request method and resource path:
+		- @RequestMapping(method = RequestMethod.POST, path = "/users")
+	- We can have a value from the request uri as a path variable. The path variable should be one of the method arguments annotated with @PathVariable.
+		- @RequestMapping(method = RequestMethod.GET, path = "/users/{id}")
+		- public EntityModel<User> retrieveOne(@PathVariable Integer id)
+	- We can have a whole structure as a request body that can be mapped to an object. This is used to map a post request.
+		- public ResponseEntity<User> addUser(@RequestBody User user)
+		- in this case the request body whould provide the filed variables for that object.
+		- There must be a constructor or setter method in the class in case we need to map the request body to an object
+
+9. Response of a RESTapi:
+	- The response of the REST API is nothing but what the mehtod in RestController class returns when called
+	- This return type can be anything
+		- All primitive types
+		- Any Object
+	- Below are some conventional return types:
+		- ResponseEntity<of-a-class>
+			- return ResponseEntity.created(loc).body(user);
+		- EntityModel<of-a-class>
+			- This is from the package HATEOAS
+		- If an object is sent back as a response, there is a dependency named Jackson that converts it into JSON or other expect format
+10. Returning Additional Response Headers:
+	- We can get the URI of the newly created resource programatically:
+		- URI loc = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(userService.saveOne(user).getId()).toUri();
+
+11. The correct HTTP response code for a new creation request is '201 Created'.
+
+12. Generic Exception Handling in Spring Boot: Spring Boot has its own exception handling mechanism. That is, whenever an exception is thrown, Spring boot knows below 
+
+things:
+	- What should be the exception response format
+	- What should be the http response code
+	- What should be the message and descriptions
+	
+13. Custom Exception Handling: 
+	- We can create an exception by extending the RuntimeException class
+	- We can mention what should be the response status by using @ResponseStatus(HttpStatus.Something)
+		- @ResponseStatus(HttpStatus.NOT_FOUND)
+	- We can throw this exception whenever needed.
+	- We can then let spring boot take care of the Exception formating
+14. We can do further customization in the below areas:
+	- We can set a Specific Exception format. This is just a normal java class with no annotation and no extension. The field variables are used to mean different 
+attributes of the exception response. 
+	- We can take controll of a particular or every exception thrown and send exception response in our own way:
+		- An exception response is nothing but a ResponseEntity of the ExceptionResponse class. 
+		- We need a CustomizedResponseEntityExceptionHandler extending the ResponseEntityExceptionHandler class
+		- This customized exception handler class must be a RestController
+		- This customized exception handler class must work on all the classes in the application. Which is why we need to annotate this with @ControllerAdvice
+		- To intercept and take care of a thrown exception we need to have a method annotated with @ExceptionHandler(ExceptionClassName.class)
+		- This method will have that specific type of Exception as an argument
+		- Later this exception object can be used to extract the exception message and other details.
+		- We can also catch the WebRequest object as an argument of the method and get the detail description from the WebRequest object.
+		- This method then revert a response within ResponseEntity<of-Exception-response-format-class>.
+		- To send the Exception Response , we need to instantiate the ExceptionResponseFormat class
+			- ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+		- We need to create a ResponseEntity using that ExceptionResponseFormat object and appropriate HttpStatus.
+			- return new ResponseEntity<ExceptionResponse>(exceptionResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+		- For some exception there are built in or factory methods in the ResponseEntityExceptionHandler. In that case, if we want to again add a method with that exceptionhandler annotation, then this will revert an error.
+		- In such cases, we just need to override that exception handling method and revert a response entity of our expected format
+15. HATEOAS
+16. Validation
+17. Internationalization
+18 . Content Negotiation

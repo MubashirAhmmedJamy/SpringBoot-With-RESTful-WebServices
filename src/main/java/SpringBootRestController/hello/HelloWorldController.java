@@ -31,12 +31,12 @@ public class HelloWorldController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, path="/greetings")
-	public String greet(@RequestHeader(name="Accept-Language",required=false) String locale){
-		System.out.println("Locale:" + locale);
-		Locale local = new Locale(locale);
-		System.out.println(local.toString());
+	public String greet(@RequestHeader(name="Accept-Language",required=false) String localeString){
+		System.out.println("Locale:" + localeString);
+		Locale locale = new Locale(localeString);
+		System.out.println(locale.toString());
 		
-		String message = messageSource.getMessage("good.morning.message", null, local);
+		String message = messageSource.getMessage("good.morning.message", null, locale);
 		return message;
 	}
 	
