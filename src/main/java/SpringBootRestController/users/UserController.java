@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,7 +64,6 @@ public class UserController {
 		System.out.println("Link: " + link);
 		
 		return EntityModel.of(user).add(link);
-
 	}
 
 	// Whatever this method is returning, this is actually the response to the
@@ -71,13 +72,16 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST, path = "/users")
 
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
-		System.out.println("Testing The Service POST");
+		System.out.println("Working with The Service POST");
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+		URI loc = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(userService.saveOne(user).getId()).toUri();
-
-		return ResponseEntity.created(location).build();
-
+//		ResponseEntity<User> re = new ResponseEntity<User>(user,HttpStatus.CREATED);
+//		return ResponseEntity.created(loc).build();
+//		ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.LOCATION, loc).build();
+//		return new ResponseEntity<User>(user, HttpStatus.CREATED);
+		
+		return ResponseEntity.created(loc).body(user);
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, path = "/users/{id}")
