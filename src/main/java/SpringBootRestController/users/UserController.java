@@ -89,7 +89,7 @@ public class UserController {
 		User user = userService.deleteOne(id);
 
 		if (user == null) {
-			throw new UserNotFoundException("Delete: There is no user with id: " + id);
+			throw new UserNotFoundException("User not found with id: " + id);
 		}
 
 		return user;
