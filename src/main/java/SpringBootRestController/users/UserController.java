@@ -36,6 +36,7 @@ public class UserController {
 	// client
 	@RequestMapping(method = RequestMethod.GET, path = "/users")
 	public List<User> retrieveAll() {
+		System.out.println("Getting all users. New");
 		return userService.findAll();
 	}
 

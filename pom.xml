@@ -8,20 +8,15 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.4.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
-
-
 	</parent>
+
 	<groupId>Spring.Boot.Rest.Controller</groupId>
-	
 	<artifactId>SpringBootRestController</artifactId>
-	
 	<version>0.0.1-SNAPSHOT</version>
-	
 	<name>SpringBootRestController</name>
-	
 	<description>SpringBootRestController</description>
-	
-	
+
+
 	<properties>
 		<java.version>1.8</java.version>
 		<downloadSources>true</downloadSources>
@@ -49,6 +44,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security--> 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -103,19 +105,19 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
 		</repository>
-	
+
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
 			<url>https://repo.spring.io/snapshot</url>
-			
+
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>

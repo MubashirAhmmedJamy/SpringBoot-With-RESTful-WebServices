@@ -54,6 +54,10 @@ public class SomeBeanController {
 		return getMapping(list, properties);
 	}
 
+	
+	
+	//	Mapping Producer method
+	
 	private MappingJacksonValue getMapping(Object object, String[] properties) {
 
 		System.out.println("Getting Mappring for: " + object.toString() + " | " + properties.getClass());
