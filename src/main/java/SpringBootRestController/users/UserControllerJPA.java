@@ -10,6 +10,8 @@ package SpringBootRestController.users;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
@@ -25,39 +27,40 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import SpringBootRestController.exceptions.UserNotFoundException;
 
 @RestController
-public class UserController {
+public class UserControllerJPA {
 
 	// To manage the backend data the controller must have an object of the DAO
 	// class
 	@Autowired
 	private UserDAOservice userService;
 
-	// Whatever this method is returning, this is actually the response to the
-	// client
-	@RequestMapping(method = RequestMethod.GET, path = "/users")
+	@Autowired
+	private UserJPARepository userRepository;
+	
+	
+// 	This api will fetch all users from in-memory database
+	
+	@RequestMapping(method = RequestMethod.GET, path = "/jpa/users")
 	public List<User> retrieveAll() {
-		System.out.println("Getting all users. New");
-		return userService.findAll();
+		System.out.println("\n\nJPA: Getting all users from database\n\n");
+		return userRepository.findAll();
 	}
+	
+	
+//	This API will fetch user by id from the H2 database
 
-	// Whatever this method is returning, this is actually the response to the
-	// client
-	// We can directly return an object which will be auto converted to JSON by
-	// Springboot. This is a comment
-
-
-	@RequestMapping(method = RequestMethod.GET, path = "/users/{id}")
-	public EntityModel<User> retrieveOne(@PathVariable Integer id) {
+	@RequestMapping(method = RequestMethod.GET, path = "/jpa/users/{id}")
+	public EntityModel<Optional<User>> retrieveOne(@PathVariable Integer id) {
 		
 		System.out.println("Getting User with id: "+id);
 		
-		User user = userService.findOne(id);
+		Optional<User> user = userRepository.findById(id);
 
-		if (user == null) {
+		if (!user.isPresent()) {
 			throw new UserNotFoundException("Get: There is no user with id " + id);
 		}
 		
-		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserController.class)
+		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(UserControllerJPA.class)
 				.retrieveAll()).withRel("all-users");
 		
 		System.out.println("Link: " + link);
@@ -65,16 +68,14 @@ public class UserController {
 		return EntityModel.of(user).add(link);
 	}
 
-	// Whatever this method is returning, this is actually the response to the
-	// client
 
-	@RequestMapping(method = RequestMethod.POST, path = "/users")
+	@RequestMapping(method = RequestMethod.POST, path = "/jpa/users")
 
 	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
 		System.out.println("Working with The Service POST");
 
 		URI loc = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(userService.saveOne(user).getId()).toUri();
+				.buildAndExpand(userRepository.save(user).getId()).toUri();
 //		ResponseEntity<User> re = new ResponseEntity<User>(user,HttpStatus.CREATED);
 //		return ResponseEntity.created(loc).build();
 //		ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.LOCATION, loc).build();
@@ -83,15 +84,14 @@ public class UserController {
 		return ResponseEntity.created(loc).body(user);
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, path = "/users/{id}")
-	public User deleteOne(@PathVariable Integer id) {
-		System.out.println("Got a Delete Request");
-		User user = userService.deleteOne(id);
+	@RequestMapping(method = RequestMethod.DELETE, path = "/jpa/users/{id}")
+	public Optional<User> deleteOne(@PathVariable Integer id) {
+		System.out.println("Got a Delete Request for JPA\n");
+		
+		Optional<User> user = userRepository.findById(id);
 
-		if (user == null) {
-			throw new UserNotFoundException("User not found with id: " + id);
-		}
-
+		userRepository.deleteById(id);
+		
 		return user;
 	}
 

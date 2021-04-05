@@ -2,12 +2,18 @@ package SpringBootRestController.users;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 
-
+@Entity
 public class User{
+	
+	@Id
+	@GeneratedValue
 	private Integer id;
 	
 	@Size(max=10,min=4,message="Name size must be between 4 and 10 characters")
