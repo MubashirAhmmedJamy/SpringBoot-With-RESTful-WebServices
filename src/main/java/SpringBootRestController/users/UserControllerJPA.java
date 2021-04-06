@@ -29,10 +29,8 @@ import SpringBootRestController.exceptions.UserNotFoundException;
 @RestController
 public class UserControllerJPA {
 
-	// To manage the backend data the controller must have an object of the DAO
-	// class
-	@Autowired
-	private UserDAOservice userService;
+// To manage the backend data we need to have a JpaRepository interface and that interface methods will be implemented by spring boot
+//	itself
 
 	@Autowired
 	private UserJPARepository userRepository;
@@ -75,12 +73,7 @@ public class UserControllerJPA {
 		System.out.println("Working with The Service POST");
 
 		URI loc = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(userRepository.save(user).getId()).toUri();
-//		ResponseEntity<User> re = new ResponseEntity<User>(user,HttpStatus.CREATED);
-//		return ResponseEntity.created(loc).build();
-//		ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.LOCATION, loc).build();
-//		return new ResponseEntity<User>(user, HttpStatus.CREATED);
-		
+				.buildAndExpand(userRepository.save(user).getId()).toUri();		
 		return ResponseEntity.created(loc).body(user);
 	}
 
@@ -91,7 +84,7 @@ public class UserControllerJPA {
 		Optional<User> user = userRepository.findById(id);
 
 		userRepository.deleteById(id);
-		
+
 		return user;
 	}
 

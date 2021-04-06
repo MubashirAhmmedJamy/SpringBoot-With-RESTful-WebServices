@@ -17,11 +17,11 @@ public class SpringBootRestControllerApplication {
 	public static void main(String[] args) {
 		ApplicationContext application_context = SpringApplication.run(SpringBootRestControllerApplication.class, args);
 		
-		int i = 0;
-		
-		for (String beanName : application_context.getBeanDefinitionNames()) {
-			System.out.println("Bean:"+ ++i +": "+beanName);
-		}
+//		int i = 0;
+//		
+//		for (String beanName : application_context.getBeanDefinitionNames()) {
+//			System.out.println("Bean:"+ ++i +": "+beanName);
+//		}
 	}
 	
 	

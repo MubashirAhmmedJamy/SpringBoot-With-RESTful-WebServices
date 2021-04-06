@@ -1,12 +1,16 @@
 package SpringBootRestController.users;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
+
+import SpringBootRestController.posts.Post;
 
 
 @Entity
@@ -22,6 +26,8 @@ public class User{
 	@Past(message="Birthdate must be of the past.")
 	private Date dateOfBirth;
 	
+	@OneToMany(mappedBy = "user")
+	private List<Post> post;
 	
 	protected User(){
 		
