@@ -65,6 +65,18 @@ public class User{
 		this.dateOfBirth = dateOfBirth;
 	}
 
+
+	public List<Post> getPost() {
+		return post;
+	}
+
+
+	public void setPost(List<Post> post) {
+		this.post = post;
+	}
+	
+	
+
 //	@Override
 //	public String toString() {
 //		return "User [id=" + id + ", name=" + name + ", dateOfBirth=" + dateOfBirth + ", getId()=" + getId()

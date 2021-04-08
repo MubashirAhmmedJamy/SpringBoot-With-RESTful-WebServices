@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import SpringBootRestController.exceptions.UserNotFoundException;
+import SpringBootRestController.posts.Post;
 
 @RestController
 public class UserControllerJPA {
@@ -64,6 +66,17 @@ public class UserControllerJPA {
 		System.out.println("Link: " + link);
 		
 		return EntityModel.of(user).add(link);
+	}
+	
+	
+	@RequestMapping(method = RequestMethod.GET, path = "/jpa/users/{id}/posts")
+	public ResponseEntity<List<Post>> getAllPosts(@PathVariable Integer id){
+		
+		Optional<User> user = userRepository.findById(id);
+		
+		List<Post> list = user.get().getPost();
+		
+		return new ResponseEntity<List<Post>>(list,HttpStatus.OK);
 	}
 
 
