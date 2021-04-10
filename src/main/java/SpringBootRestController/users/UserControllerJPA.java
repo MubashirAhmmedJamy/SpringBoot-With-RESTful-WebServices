@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import SpringBootRestController.exceptions.UserNotFoundException;
 import SpringBootRestController.posts.Post;
+import SpringBootRestController.posts.PostJPARepository;
 
 @RestController
 public class UserControllerJPA {
@@ -36,6 +37,9 @@ public class UserControllerJPA {
 
 	@Autowired
 	private UserJPARepository userRepository;
+	
+	@Autowired
+	private PostJPARepository postRepository;
 	
 	
 // 	This api will fetch all users from in-memory database
@@ -74,6 +78,10 @@ public class UserControllerJPA {
 		
 		Optional<User> user = userRepository.findById(id);
 		
+		if(!user.isPresent()) {
+			throw new UserNotFoundException("User not found exception. There is no user with id "+id);
+		}
+		
 		List<Post> list = user.get().getPost();
 		
 		return new ResponseEntity<List<Post>>(list,HttpStatus.OK);
@@ -100,5 +108,21 @@ public class UserControllerJPA {
 
 		return user;
 	}
-
+	
+	@RequestMapping(method = RequestMethod.POST, path = "/jpa/user/{id}/posts")
+	public ResponseEntity<Post> createPost(@PathVariable Integer id, @RequestBody Post post) {
+		Optional<User> user = userRepository.findById(id);
+		
+		if(!user.isPresent()) {
+			throw new UserNotFoundException("User not found exception. No user found with id "+id+" to create a post for");
+		}
+		
+		post.setUser(user.get());
+		
+		
+		URI loc = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(postRepository.save(post).getId()).toUri();		
+		return ResponseEntity.created(loc).body(post);
+		
+	}
 }
